@@ -26,12 +26,12 @@ use PHPStan\Rules\Rule;
 class BannedNodesRule implements Rule
 {
     /**
-     * @var array
+     * @var array<array<string, string[]>>
      */
     private $bannedNodes;
 
     /**
-     * @param array $bannedNodes
+     * @param array<array<string, string|string[]>> $bannedNodes
      */
     public function __construct(array $bannedNodes)
     {
@@ -58,12 +58,8 @@ class BannedNodesRule implements Rule
         }
 
         if ($node instanceof FuncCall) {
-            if ($node->name instanceof Variable) {
-                return [];
-            }
-
             if (!$node->name instanceof Name) {
-                throw new \RuntimeException(sprintf('Expected instance of %s for $node->name, %s given', Name::class, \get_class($node->name)));
+                return [];
             }
 
             $function = $node->name->toString();
